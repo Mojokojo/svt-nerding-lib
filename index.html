@@ -59,16 +59,20 @@
   .pill{height:40px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 12px;display:flex;align-items:center;gap:7px;cursor:pointer;font-weight:500;font-size:14px}
   .pill svg{width:17px;height:17px}
   .badge{background:var(--accent);color:#fff;border-radius:999px;font-size:11.5px;min-width:19px;height:19px;display:inline-grid;place-items:center;padding:0 5px}
-  .sortwrap{flex:1;position:relative}
-  .sortwrap select{appearance:none;-webkit-appearance:none;width:100%;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 32px 0 12px;font-weight:500;font-size:14px;cursor:pointer}
-  .sortwrap svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none;color:var(--ink-3)}
+  .frow{align-items:center;margin-right:-16px}
+  .frow .pill{flex:none}
+  .sortwrap{position:relative;display:flex;align-items:center;gap:6px;flex:none}
+  .sortlab{font-size:13px;color:var(--ink-3)}
+  .sortwrap select{appearance:none;-webkit-appearance:none;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--paper);padding:0 30px 0 11px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--ink)}
+  .sortwrap svg{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:15px;height:15px;pointer-events:none;color:var(--ink-3)}
 
-  .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:0 16px}
+  .chips{flex:1;min-width:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-right:16px;
+    -webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
   .chips::-webkit-scrollbar{display:none}
   .chip{flex:none;border:1px solid transparent;background:var(--chip);border-radius:999px;padding:6px 11px;font-size:13px;cursor:pointer;white-space:nowrap;color:var(--ink-2)}
   .chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
 
-  .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink-3);margin:4px 0 10px}
+  .meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;color:var(--ink-3);margin:10px 0 0}
   .linkbtn{border:0;background:none;color:var(--accent);font-weight:600;cursor:pointer;padding:4px 0;font-size:13px}
 
   .list{display:grid;gap:12px}
@@ -79,9 +83,23 @@
   .card h2{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:18.5px;line-height:1.25;margin:8px 0 2px}
   .card h2 small{display:block;font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:13px;font-style:italic;color:var(--ink-3);margin-top:2px}
   .by{font-size:13.5px;color:var(--ink-2)}
-  .sum{font-size:14.5px;color:var(--ink-2);margin:8px 0 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  .card.open .sum{-webkit-line-clamp:unset;display:block}
-  .more{border:0;background:none;padding:2px 0;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer}
+  .card.tap{cursor:pointer}
+  .sum{font-size:14.5px;color:var(--ink-2);margin:8px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .more{border:0;background:none;padding:6px 0 0;color:var(--accent);font-weight:600;font-size:13.5px;cursor:pointer}
+
+  /* details panel */
+  .detail .bd{padding:2px 20px 8px}
+  .detail .dtop{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-3);margin-top:4px}
+  .detail h2{font-family:Fraunces,Georgia,serif;font-weight:650;font-size:24px;line-height:1.2;margin:8px 0 4px}
+  .detail h2 small{display:block;font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:14px;font-style:italic;color:var(--ink-3);margin-top:4px}
+  .detail .dsum{font-size:15.5px;line-height:1.6;color:var(--ink);margin:12px 0 4px;white-space:pre-line}
+  .detail dl{margin:14px 0 0;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;font-size:14px;border-top:1px solid var(--line);padding-top:14px}
+  .detail dt{color:var(--ink-3)}
+  .detail dd{margin:0;color:var(--ink);font-weight:500;min-width:0;overflow-wrap:anywhere}
+  .detail dd .chip{margin:0 5px 5px 0;font-size:12.5px;padding:5px 10px}
+  .detail .ft a{flex:1.6;height:46px;border-radius:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:7px;
+    background:var(--ink);color:var(--bg);text-decoration:none}
+  .detail .ft a svg{width:16px;height:16px}
   .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
   .tags .chip{font-size:12px;padding:4px 9px}
   .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;padding-top:11px;border-top:1px dashed var(--line)}
@@ -144,12 +162,17 @@
         <input id="q" type="search" placeholder="Search titles, people, topics…" autocomplete="off" enterkeyhint="search">
         <button class="clear" id="qclear" aria-label="Clear search">✕</button>
       </div>
-      <div class="row">
+      <div class="row frow">
         <button class="pill" id="openFilters">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
           Filters <span class="badge hidden" id="fcount">0</span>
         </button>
-        <div class="sortwrap">
+        <div class="chips" id="quickTags" aria-label="Topics"></div>
+      </div>
+      <div class="meta">
+        <span><span id="count"></span> <button class="linkbtn hidden" id="clearAll">· Clear filters</button></span>
+        <label class="sortwrap">
+          <span class="sortlab">Sort</span>
           <select id="sort" aria-label="Sort">
             <option value="new">Newest first</option>
             <option value="old">Oldest first</option>
@@ -159,11 +182,9 @@
             <option value="rec">Recommended by</option>
           </select>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
-        </div>
+        </label>
       </div>
-      <div class="chips" id="quickTags" aria-label="Topics"></div>
     </div>
-    <div class="meta"><span id="count"></span><button class="linkbtn hidden" id="clearAll">Clear filters</button></div>
     <div class="list" id="list"></div>
   </section>
 
@@ -180,6 +201,11 @@
   <div class="hd"><h3>Filters</h3><button class="linkbtn" id="sheetClear">Clear all</button></div>
   <div class="bd" id="sheetBody"></div>
   <div class="ft"><button id="sheetClose">Close</button><button class="primary" id="sheetApply">Show results</button></div>
+</div>
+<div class="sheet detail" id="detail" role="dialog" aria-modal="true" aria-label="Resource details">
+  <div class="grab"></div>
+  <div class="bd" id="detailBody"></div>
+  <div class="ft" id="detailFt"></div>
 </div>
 
 <script>
@@ -362,23 +388,47 @@ function renderLib(){
   if(!all.length){ $("#list").innerHTML=`<div class="skeleton"></div><div class="skeleton"></div>`; return; }
   if(!list.length){ $("#list").innerHTML=`<div class="empty"><b>Nothing matches yet</b>Try fewer filters or a different word.</div>`; return; }
   $("#list").innerHTML=list.map(it=>`
-    <article class="card">
+    <article class="card tap" data-item="${it.i}">
       <div class="top"><span class="type"><i style="background:${typeColor(it.type)}"></i>${esc(it.type||"Link")}</span><span>${esc(it.date)}</span></div>
-      <h2>${esc(it.title)}${it.alt?`<small>${esc(it.alt)}</small>`:""}</h2>
+      <h2>${esc(it.title)}</h2>
       ${it.speaker?`<div class="by">${esc(it.speaker)}</div>`:""}
-      ${it.summary?`<p class="sum">${esc(it.summary)}</p><button class="more hidden">Read more</button>`:""}
-      ${it.tags.length?`<div class="tags">${it.tags.map(t=>`<button class="chip" data-f="tags" data-v="${esc(t)}" aria-pressed="${state.f.tags.has(t)}">${esc(t)}</button>`).join("")}</div>`:""}
+      ${it.summary?`<p class="sum">${esc(it.summary)}</p>`:""}
+      <button class="more" data-item="${it.i}">Read more</button>
       <div class="foot">
         <div class="rec">${it.rec?`Shared by <b>${esc(it.rec)}</b>`:""}</div>
-        ${it.link?`<a class="open" href="${esc(it.link)}" target="_blank" rel="noopener">${esc(linkLabel(it.link)||"Open")}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`:""}
+        ${it.link?`<a class="open" href="${esc(it.link)}" target="_blank" rel="noopener">${esc(linkLabel(it.link)||"Open")}${ARROW}</a>`:""}
       </div>
     </article>`).join("");
-  // show "Read more" only where the summary is actually clipped
-  requestAnimationFrame(()=>document.querySelectorAll("#list .card").forEach(c=>{
-    const p=c.querySelector(".sum"), b=c.querySelector(".more"); if(p&&b&&p.scrollHeight>p.clientHeight+2) b.classList.remove("hidden");
-  }));
 }
+const ARROW=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
+
+/* ---------- details panel ---------- */
+function openDetail(i){
+  const it=libItems().find(x=>x.i===i); if(!it) return;
+  const row=(k,v)=>v?`<dt>${k}</dt><dd>${v}</dd>`:"";
+  $("#detailBody").innerHTML=`
+    <div class="dtop"><span class="type"><i style="background:${typeColor(it.type)}"></i>${esc(it.type||"Link")}</span><span>${esc(it.date)}</span></div>
+    <h2>${esc(it.title)}${it.alt?`<small>${esc(it.alt)}</small>`:""}</h2>
+    ${it.speaker?`<div class="by">${esc(it.speaker)}</div>`:""}
+    ${it.summary?`<p class="dsum">${esc(it.summary)}</p>`:""}
+    <dl>
+      ${row("Topics", it.tags.map(t=>`<button class="chip" data-f="tags" data-v="${esc(t)}" data-close="1" aria-pressed="${state.f.tags.has(t)}">${esc(t)}</button>`).join(""))}
+      ${row("Type", esc(it.type))}
+      ${row("Shared by", esc(it.rec))}
+      ${row("Added", esc(it.date))}
+      ${row("Source", esc(linkLabel(it.link)))}
+    </dl>`;
+  $("#detailFt").innerHTML=`<button id="detailClose">Close</button>${it.link?`<a href="${esc(it.link)}" target="_blank" rel="noopener">Open link${ARROW}</a>`:""}`;
+  $("#detailBody").scrollTop=0;
+  $("#detail").classList.add("on"); $("#scrim").classList.add("on");
+  try{ history.pushState({detail:1},""); }catch(e){}
+}
+function closeDetail(fromPop){
+  if(!$("#detail").classList.contains("on")) return;
+  $("#detail").classList.remove("on"); $("#scrim").classList.remove("on");
+  if(!fromPop && history.state && history.state.detail){ try{ history.back(); }catch(e){} }
+}
+window.addEventListener("popstate",()=>closeDetail(true));
 function renderSimple(t){
   const d=DATA[t.name];
   if(!d){ $("#simpleList").innerHTML=`<div class="skeleton"></div>`; return; }
@@ -414,10 +464,14 @@ document.addEventListener("click",e=>{
   const tab=e.target.closest("[data-tab]");
   if(tab){ state.tab=tab.dataset.tab; const t=TABS.find(x=>x.name===state.tab); try{ history.replaceState(null,"","#"+slug(t.label)); }catch(_){ } savePrefs(); render(); window.scrollTo({top:0}); return; }
   const chip=e.target.closest("[data-f]");
-  if(chip){ const s=state.f[chip.dataset.f], v=chip.dataset.v; s.has(v)?s.delete(v):s.add(v);
+  if(chip){ const s=state.f[chip.dataset.f], v=chip.dataset.v;
+    if(chip.dataset.close){ s.add(v); closeDetail(); renderLib(); window.scrollTo({top:0,behavior:"smooth"}); return; }
+    s.has(v)?s.delete(v):s.add(v);
     renderLib(); if($("#sheet").classList.contains("on")) renderSheet(); return; }
-  const more=e.target.closest(".more");
-  if(more){ const c=more.closest(".card"); c.classList.toggle("open"); more.textContent=c.classList.contains("open")?"Show less":"Read more"; }
+  if(e.target.closest("#detailClose")){ closeDetail(); return; }
+  if(e.target.closest("a")) return;
+  const card=e.target.closest("[data-item]");
+  if(card){ openDetail(+card.dataset.item); }
 });
 let qt; $("#q").addEventListener("input",e=>{ clearTimeout(qt); qt=setTimeout(()=>{ state.q=e.target.value.trim(); renderLib(); },120); });
 $("#qclear").onclick=()=>{ $("#q").value=""; state.q=""; renderLib(); $("#q").focus(); };
@@ -426,7 +480,7 @@ $("#sort").onchange=e=>{ state.sort=e.target.value; savePrefs(); renderLib(); };
 $("#clearAll").onclick=()=>{ Object.values(state.f).forEach(s=>s.clear()); state.q=""; $("#q").value=""; renderLib(); };
 $("#sheetClear").onclick=()=>{ Object.values(state.f).forEach(s=>s.clear()); renderSheet(); renderLib(); };
 $("#openFilters").onclick=openSheet;
-$("#sheetApply").onclick=closeSheet; $("#sheetClose").onclick=closeSheet; $("#scrim").onclick=closeSheet;
+$("#sheetApply").onclick=closeSheet; $("#sheetClose").onclick=closeSheet; $("#scrim").onclick=()=>{ closeSheet(); closeDetail(); };
 $("#refresh").onclick=()=>load(true);
 $("#sheetLink").href=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
 // re-check the sheet when someone comes back to the tab after a while
