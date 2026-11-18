@@ -152,7 +152,6 @@
     <div class="t">
       <h1>Nerding <span>Library</span></h1>
       <div class="sub">Videos, articles, books and papers shared in the group.</div>
-      <div class="status" id="status"><i class="dot warn"></i><span>Loading…</span></div>
     </div>
     <button class="iconbtn" id="refresh" aria-label="Refresh from the sheet" title="Refresh">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
@@ -313,7 +312,7 @@ async function load(manual){
     }
   }finally{ btn.classList.remove("spin"); render(); }
 }
-function setStatus(kind,msg){ $("#status").innerHTML=`<i class="dot ${kind==="ok"?"":kind}"></i><span>${esc(msg)}</span>`; }
+function setStatus(kind,msg){ const el=$("#status"); if(!el) return; el.innerHTML=`<i class="dot ${kind==="ok"?"":kind}"></i><span>${esc(msg)}</span>`; }
 function timeStr(d){ return d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}); }
 
 /* ---------- state ---------- */
