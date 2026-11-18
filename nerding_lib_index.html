@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f1e7">
+<title>Nerding Lib</title>
+<meta name="description" content="Videos, articles, books and papers shared in the group, in one searchable place.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f1e7; --paper:#fffdf8; --ink:#1f1d1a; --ink-2:#5b554c; --ink-3:#8a8276;
+    --line:#e6ddcc; --accent:#b4532a; --accent-soft:#f6e3d6; --chip:#efe8da;
+    --radius:16px; --shadow:0 1px 2px rgba(60,40,10,.06),0 4px 14px rgba(60,40,10,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#16140f; --paper:#1f1c16; --ink:#f3ede2; --ink-2:#c3baab; --ink-3:#8f8778;
+      --line:#332e25; --accent:#e58a5c; --accent-soft:#3a2619; --chip:#2a261e;
+      --shadow:0 1px 2px rgba(0,0,0,.3); }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--ink)}
+  body{font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  button,input,select{font:inherit;color:inherit}
+  a{color:inherit}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
+
+  header{padding:22px 0 10px;display:flex;align-items:flex-start;gap:12px}
+  header .t{flex:1;min-width:0}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:650;font-size:30px;line-height:1.1;margin:0;letter-spacing:-.01em}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--ink-2);font-size:13.5px;margin-top:4px}
+  .status{font-size:12px;color:var(--ink-3);margin-top:6px;display:flex;align-items:center;gap:6px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#4a9b5f;flex:none}
+  .dot.warn{background:#d39a2c}.dot.off{background:#b9483a}
+  .iconbtn{flex:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--paper);
+    display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow)}
+  .iconbtn svg{width:20px;height:20px}
+  .spin svg{animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px 0 12px;margin:0 -16px;padding-left:16px;padding-right:16px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:none;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 14px;font-weight:500;font-size:14px;cursor:pointer;white-space:nowrap}
+  .tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .tab .n{opacity:.6;margin-left:4px;font-size:12.5px}
+
+  .toolbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0 10px;margin:0 -16px;padding-left:16px;padding-right:16px}
+  .search{position:relative}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ink-3)}
+  .search input{width:100%;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--paper);
+    padding:0 40px 0 40px;font-size:16px;outline:none;box-shadow:var(--shadow)}
+  .search input:focus{border-color:var(--accent)}
+  .search .clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;width:34px;height:34px;border-radius:10px;cursor:pointer;color:var(--ink-3);display:none}
+  .row{display:flex;gap:8px;margin-top:8px}
+  .pill{height:40px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 12px;display:flex;align-items:center;gap:7px;cursor:pointer;font-weight:500;font-size:14px}
+  .pill svg{width:17px;height:17px}
+  .badge{background:var(--accent);color:#fff;border-radius:999px;font-size:11.5px;min-width:19px;height:19px;display:inline-grid;place-items:center;padding:0 5px}
+  .sortwrap{flex:1;position:relative}
+  .sortwrap select{appearance:none;-webkit-appearance:none;width:100%;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 32px 0 12px;font-weight:500;font-size:14px;cursor:pointer}
+  .sortwrap svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none;color:var(--ink-3)}
+
+  .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:0 16px}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;border:1px solid transparent;background:var(--chip);border-radius:999px;padding:6px 11px;font-size:13px;cursor:pointer;white-space:nowrap;color:var(--ink-2)}
+  .chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+
+  .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink-3);margin:4px 0 10px}
+  .linkbtn{border:0;background:none;color:var(--accent);font-weight:600;cursor:pointer;padding:4px 0;font-size:13px}
+
+  .list{display:grid;gap:12px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px 14px;box-shadow:var(--shadow)}
+  .card .top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--ink-3)}
+  .type{display:inline-flex;align-items:center;gap:5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:11px;color:var(--ink-2)}
+  .type i{width:8px;height:8px;border-radius:2px;display:inline-block}
+  .card h2{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:18.5px;line-height:1.25;margin:8px 0 2px}
+  .card h2 small{display:block;font-family:Inter,system-ui,sans-serif;font-weight:400;font-size:13px;font-style:italic;color:var(--ink-3);margin-top:2px}
+  .by{font-size:13.5px;color:var(--ink-2)}
+  .sum{font-size:14.5px;color:var(--ink-2);margin:8px 0 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .card.open .sum{-webkit-line-clamp:unset;display:block}
+  .more{border:0;background:none;padding:2px 0;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+  .tags .chip{font-size:12px;padding:4px 9px}
+  .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;padding-top:11px;border-top:1px dashed var(--line)}
+  .rec{font-size:12.5px;color:var(--ink-3);min-width:0}
+  .rec b{color:var(--ink-2);font-weight:600}
+  .open{flex:none;display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--bg);text-decoration:none;border-radius:11px;padding:9px 13px;font-weight:600;font-size:13.5px}
+  .open svg{width:15px;height:15px}
+
+  .simple{display:flex;align-items:center;gap:12px;text-decoration:none}
+  .simple .lab{flex:none;min-width:52px;height:52px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:650;font-size:13px;text-align:center;line-height:1.1;padding:4px}
+  .simple .txt{flex:1;min-width:0}
+  .simple .txt b{display:block;font-family:Fraunces,Georgia,serif;font-weight:600;font-size:17px;line-height:1.25}
+  .simple .txt span{font-size:12.5px;color:var(--ink-3)}
+  .simple svg{width:18px;height:18px;color:var(--ink-3);flex:none}
+
+  .empty{text-align:center;color:var(--ink-3);padding:40px 10px}
+  .empty b{display:block;color:var(--ink-2);font-size:16px;margin-bottom:4px}
+  .skeleton{height:150px;border-radius:var(--radius);background:linear-gradient(90deg,var(--chip),var(--paper),var(--chip));background-size:200% 100%;animation:sh 1.2s infinite}
+  @keyframes sh{to{background-position:-200% 0}}
+
+  /* bottom sheet */
+  .scrim{position:fixed;inset:0;background:rgba(20,14,6,.4);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--paper);border-radius:20px 20px 0 0;max-height:82vh;display:flex;flex-direction:column;
+    transform:translateY(105%);transition:transform .25s ease;max-width:720px;margin:0 auto;box-shadow:0 -10px 30px rgba(0,0,0,.15)}
+  .sheet.on{transform:none}.scrim.on{opacity:1;pointer-events:auto}
+  .sheet .grab{width:40px;height:5px;border-radius:9px;background:var(--line);margin:9px auto 0}
+  .sheet .hd{display:flex;justify-content:space-between;align-items:center;padding:8px 18px 6px}
+  .sheet .hd h3{margin:0;font-family:Fraunces,Georgia,serif;font-size:20px;font-weight:600}
+  .sheet .bd{overflow:auto;padding:4px 18px 10px}
+  .sheet h4{margin:14px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+  .sheet .wrapchips{display:flex;flex-wrap:wrap;gap:7px}
+  .sheet .wrapchips .chip{padding:8px 12px;font-size:13.5px}
+  .sheet .ft{display:flex;gap:10px;padding:12px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+  .sheet .ft button{flex:1;height:46px;border-radius:12px;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--paper)}
+  .sheet .ft .primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  footer{text-align:center;font-size:12px;color:var(--ink-3);margin-top:28px}
+  footer a{color:var(--ink-2)}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="t">
+      <h1>Nerding <span>Lib</span></h1>
+      <div class="sub">Videos, articles, books and papers shared in the group.</div>
+      <div class="status" id="status"><i class="dot warn"></i><span>Loading…</span></div>
+    </div>
+    <button class="iconbtn" id="refresh" aria-label="Refresh from the sheet" title="Refresh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+    </button>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+
+  <section id="libView">
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search titles, people, topics…" autocomplete="off" enterkeyhint="search">
+        <button class="clear" id="qclear" aria-label="Clear search">✕</button>
+      </div>
+      <div class="row">
+        <button class="pill" id="openFilters">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          Filters <span class="badge hidden" id="fcount">0</span>
+        </button>
+        <div class="sortwrap">
+          <select id="sort" aria-label="Sort">
+            <option value="new">Newest first</option>
+            <option value="old">Oldest first</option>
+            <option value="title">Title A–Z</option>
+            <option value="speaker">Speaker / writer A–Z</option>
+            <option value="type">Type</option>
+            <option value="rec">Recommended by</option>
+          </select>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="chips" id="quickTags" aria-label="Topics"></div>
+    </div>
+    <div class="meta"><span id="count"></span><button class="linkbtn hidden" id="clearAll">Clear filters</button></div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section id="simpleView" class="hidden">
+    <div class="list" id="simpleList" style="margin-top:6px"></div>
+  </section>
+
+  <footer>Want to add something? Ask an admin to add it to the <a id="sheetLink" href="#" target="_blank" rel="noopener">sheet</a>. It shows up here automatically.</footer>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Filters">
+  <div class="grab"></div>
+  <div class="hd"><h3>Filters</h3><button class="linkbtn" id="sheetClear">Clear all</button></div>
+  <div class="bd" id="sheetBody"></div>
+  <div class="ft"><button id="sheetClose">Close</button><button class="primary" id="sheetApply">Show results</button></div>
+</div>
+
+<script>
+/* ===== Settings: change these if the sheet changes ===== */
+const SHEET_ID = "1Hdxld-jntl_T1hMqLlztpIiXvcYtfsoPVW_T6hp8zMk";
+// Tabs to show, in order. "name" must match the tab name in the Google Sheet exactly.
+const TABS = [
+  { name: "Recommendations",       label: "Library",              kind: "library" },
+  { name: "Retreat Videos",        label: "Retreat Videos",       kind: "simple"  },
+  { name: "Pauses & Meditations",  label: "Pauses & Meditations", kind: "simple"  },
+];
+/* ======================================================= */
+
+const SNAPSHOT = {"taken": "18 Nov 2026", "data": {"Recommendations": {"headers": ["Title", "Tags", "Type", "Summary", "Speaker / Writer", "Recommended by", "Date Added", "Link"], "records": [{"Title": "A Wandering Mind is an Unhappy One", "Tags": "Psychology, Happiness", "Type": "Research Paper/Article", "Summary": "Covers a landmark Harvard study by Matthew Killingsworth and Dan Gilbert that tracked people’s thoughts and moods in real time. Pioneering work correlating happiness and mind wandering. Gilbert’s book Stumbling on Happiness is a fun follow-up.", "Speaker / Writer": "Jason Castro", "Recommended by": "RD", "Date Added": "Nov-2024", "Link": "https://www.scientificamerican.com/article/a-wandering-mind-is-an-un/"}, {"Title": "Human Behavioral Biology (Stanford lecture series, 25 videos)", "Tags": "Neuroscience, Psychology", "Type": "Playlist", "Summary": "Sapolsky’s full Stanford course on why we behave the way we do. It moves across evolution, genetics, hormones, neuroscience and culture, showing that no single factor explains behaviour. Long but rewarding for anyone curious about the machinery behind thoughts, emotions and actions.", "Speaker / Writer": "Robert Sapolsky", "Recommended by": "RD", "Date Added": "Nov-2024", "Link": "https://youtube.com/playlist?list=PL150326949691B199&si=ztuOlknPpTM5JrSF"}, {"Title": "The Biology of Humans at Our Best and Worst", "Tags": "Neuroscience, Psychology", "Type": "Video", "Summary": "A single talk based on his book Behave. Sapolsky traces a behaviour backwards in time, from the brain a second before, to hormones hours before, to childhood, genes and culture. A compact entry point if the full lecture series feels like too much.", "Speaker / Writer": "Robert Sapolsky", "Recommended by": "RD", "Date Added": "Nov-2024", "Link": "https://youtu.be/GRYcSuyLiJk?si=gyUQLB0aM15nR_YB"}, {"Title": "Grounds for Laziness and Arousing Energy\nkusītārambhavatthusutta", "Tags": "Buddha’s Teachings, Meditation", "Type": "Sutta", "Summary": "The Buddha lists eight everyday excuses for skipping practice, such as being tired, having work ahead, or feeling unwell. He then flips each one into a reason to practise now. Short, practical and very usable for keeping practice steady.", "Speaker / Writer": "Bhikkhu Sujato", "Recommended by": "Bhante Aruno", "Date Added": "Jan-2025", "Link": "https://suttacentral.net/an8.80/en/sujato?lang=en&layout=linebyline&reference=none&notes=asterisk&highlight=false&script=IASTPali"}, {"Title": "Jhanas -  Buddhist Meditative Absorptions in Modern Times.", "Tags": "Buddha’s Teachings, Meditation", "Type": "Video", "Summary": "Brasington explains the jhanas, deep states of concentrated absorption described by the Buddha, and how lay practitioners can access them today. He covers what each state feels like and how they support insight. Recommended viewing: minutes 23 to 55.", "Speaker / Writer": "Leigh Brasington", "Recommended by": "Mridul", "Date Added": "Jan-2025", "Link": "https://youtu.be/RCLT64SLYZk?si=bV4dCBpnLSgayC9y"}, {"Title": "Graceful Exits: How Great Beings Die", "Tags": "Impermanence, Wisdom Traditions", "Type": "Book", "Summary": "A collection of short accounts of how spiritual masters from Hindu, Buddhist, Zen, Taoist and other traditions met their deaths. Each story shows calm, humour or clarity at the final moment, offering a gentle way to reflect on our own mortality", "Speaker / Writer": "Sushila Blackman", "Recommended by": "Bhante Aruno", "Date Added": "Feb-2025", "Link": "https://books.google.com/books/about/Graceful_Exits.html?id=XN9OEAAAQBAJ"}, {"Title": "AI Overly Affirms Users Asking for Personal Advice", "Tags": "Technology & AI, Psychology, Relationships", "Type": "Research Paper/Article", "Summary": "A Stanford study published in Science found that AI chatbots, including ChatGPT, Claude, Gemini and DeepSeek, endorse users’ positions in personal conflicts about 49% more often than humans do. People who chatted with these agreeable models became more convinced they were right and less willing to apologise, yet still trusted them more. A useful read on how flattery shapes our self-view.", "Speaker / Writer": "Ula Chrobak (Stanford Report), on research by Myra Cheng & Dan Jurafsky", "Recommended by": "Mridul", "Date Added": "May-2026", "Link": "https://news.stanford.edu/stories/2026/03/ai-advice-sycophantic-models-research"}, {"Title": "Cultivating the Twelve Kinds of Wealth", "Tags": "Buddha’s Teachings", "Type": "Transcript", "Summary": "A New Year’s Eve 2011 address to the worldwide sangha from Mindrolling Monastery, introducing twelve kinds of wealth for practitioners to cultivate. She reframes wealth as far more than money, starting with the wealth of Dharma (cultivating one’s own mind)", "Speaker / Writer": "Mindrolling Jetsün Khandro Rinpoche", "Recommended by": "Smita", "Date Added": "Sep-2026", "Link": "https://drive.google.com/file/d/1o0wn-OGwtK236uXUc2Cu-Ji-HRSyUFRo/view?usp=sharing"}]}, "Retreat Videos": {"headers": ["Day", "Theme", "Link"], "records": [{"Day": "Day 1", "Theme": "Pay Attention to Attention", "Link": "https://www.youtube.com/playlist?list=PLJcbKASoPb1wJvymrRq0WJ685YDPGhymJ"}, {"Day": "Day 2", "Theme": "The Pleasure Pain Pilot", "Link": "https://www.youtube.com/playlist?list=PLJcbKASoPb1yNFilIKBaRdVcdIWWok4MT"}, {"Day": "Day 3", "Theme": "If It's Craving, It's Personal", "Link": "https://www.youtube.com/playlist?list=PLJcbKASoPb1xBp_QSQw4-OGFHuTZFS_jU"}, {"Day": "Day 4", "Theme": "Progress in Practice- the Collected States", "Link": "https://youtu.be/ES4ztPSgDW4"}, {"Day": "Day 5", "Theme": "DIY Reality", "Link": "https://www.youtube.com/playlist?list=PLJcbKASoPb1w7VTMK0rybYijb9mR7SDk6"}, {"Day": "Day 6", "Theme": "Me, Mine, Myself", "Link": "https://youtu.be/58ymKU3Ru8w"}, {"Day": "Day 7", "Theme": "The Wisdom Stack", "Link": "https://youtu.be/_tbcRrzY5xU"}, {"Day": "Day 8", "Theme": "10/10 Life", "Link": "https://www.youtube.com/playlist?list=PLJcbKASoPb1zeh1KYeJgTLSjBok3wnY6j"}]}, "Pauses & Meditations": {"headers": ["Name", "Link"], "records": [{"Name": "Guided Pauses", "Link": "https://drive.google.com/drive/folders/1PhE29pol3rqut5nnGLuUh0F8LK8t_JI7"}, {"Name": "Guided Meditation", "Link": "https://drive.google.com/drive/folders/129hiTeZolOPCiYBt4LXOMGayqRxfkQRn"}]}}};   // copy baked in at build time, used only if the live sheet can't be reached
+const CACHE_KEY = "nerdinglib.cache.v1";
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s ?? "").normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase();
+
+function parseCSV(text){
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=""; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n') i++; row.push(f); rows.push(row); row=[]; f=""; }
+    else f+=c;
+  }
+  if(f!==""||row.length){ row.push(f); rows.push(row); }
+  return rows;
+}
+function toRecords(rows){
+  if(!rows.length) return {headers:[],records:[]};
+  const head = rows[0].map(h=>h.trim());
+  const keep = head.map((h,i)=> h!=="" || rows.slice(1).some(r=>(r[i]||"").trim()!==""));
+  const headers = head.map((h,i)=> h || (i===0?"Name":"Column "+(i+1))).filter((_,i)=>keep[i]);
+  const records = rows.slice(1).map(r=>{
+    const o={}; let j=0;
+    head.forEach((_,i)=>{ if(keep[i]) o[headers[j++]]=(r[i]||"").trim(); });
+    return o;
+  }).filter(o=>Object.values(o).some(v=>v!==""));
+  return {headers,records};
+}
+
+/* column lookup by header name, tolerant to small renames */
+function col(rec, ...names){
+  for(const n of names){ for(const k in rec){ if(norm(k).replace(/[^a-z]/g,"").startsWith(norm(n).replace(/[^a-z]/g,""))) return rec[k]; } }
+  return "";
+}
+const MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+function parseDate(s){
+  s=(s||"").trim(); if(!s) return 0;
+  let m=s.match(/^([A-Za-z]{3})[a-z]*[-\s\/]+(\d{2,4})$/);
+  if(m&&MONTHS[m[1].toLowerCase()]!=null){ let y=+m[2]; if(y<100) y+=2000; return Date.UTC(y,MONTHS[m[1].toLowerCase()],1); }
+  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/); // d/m/y or m/d/y – treat as d/m/y
+  if(m){ let y=+m[3]; if(y<100) y+=2000; return Date.UTC(y,+m[2]-1,+m[1]); }
+  const t=Date.parse(s); return isNaN(t)?0:t;
+}
+function domain(url){ try{ return new URL(url).hostname.replace(/^www\.|^m\./,""); }catch(e){ return ""; } }
+function linkLabel(url){
+  const d=domain(url);
+  if(/youtu/.test(d)) return /playlist/.test(url)?"YouTube playlist":"YouTube";
+  if(/drive\.google|docs\.google/.test(d)) return "Google Drive";
+  if(/suttacentral/.test(d)) return "SuttaCentral";
+  if(/books\.google/.test(d)) return "Google Books";
+  return d;
+}
+const TYPE_COLORS=["#b4532a","#3f7d6e","#5a5fb0","#a2457a","#b08a1e","#4f7fa8","#7a6a55","#5f8f3a"];
+function typeColor(t){ let h=0; for(const c of norm(t)) h=(h*31+c.charCodeAt(0))>>>0; return TYPE_COLORS[h%TYPE_COLORS.length]; }
+
+/* ---------- data loading ---------- */
+let DATA = {};       // tabName -> {headers, records}
+let SOURCE = "";
+async function fetchTab(name){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}&_=${Date.now()}`;
+  const r=await fetch(url,{cache:"no-store"});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  const txt=await r.text();
+  if(/^\s*</.test(txt)) throw new Error("Sheet not public");
+  return toRecords(parseCSV(txt));
+}
+async function load(manual){
+  const btn=$("#refresh"); btn.classList.add("spin");
+  if(manual) setStatus("warn","Checking the sheet for new entries…");
+  try{
+    const out={};
+    await Promise.all(TABS.map(async t=>{ out[t.name]=await fetchTab(t.name); }));
+    DATA=out; SOURCE="live";
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({at:Date.now(),data:out})); }catch(e){}
+    setStatus("ok","Live from the sheet · checked "+timeStr(new Date()));
+  }catch(err){
+    let cached=null; try{ cached=JSON.parse(localStorage.getItem(CACHE_KEY)||"null"); }catch(e){}
+    if(cached&&cached.data){ DATA=cached.data; SOURCE="cache";
+      setStatus("off","Couldn't reach the sheet. Showing your copy from "+new Date(cached.at).toLocaleDateString(undefined,{day:"numeric",month:"short"})+". Tap ↻ to retry.");
+    }else{ DATA=SNAPSHOT.data; SOURCE="snapshot";
+      setStatus("off","Couldn't reach the sheet. Showing a saved copy from "+SNAPSHOT.taken+".");
+    }
+  }finally{ btn.classList.remove("spin"); render(); }
+}
+function setStatus(kind,msg){ $("#status").innerHTML=`<i class="dot ${kind==="ok"?"":kind}"></i><span>${esc(msg)}</span>`; }
+function timeStr(d){ return d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}); }
+
+/* ---------- state ---------- */
+const state={ tab:TABS[0].name, q:"", sort:"new", f:{tags:new Set(),type:new Set(),rec:new Set(),year:new Set()} };
+try{ const s=JSON.parse(localStorage.getItem("nerdinglib.prefs")||"{}"); if(s.sort) state.sort=s.sort; if(s.tab&&TABS.some(t=>t.name===s.tab)) state.tab=s.tab; }catch(e){}
+if(location.hash){ const h=location.hash.slice(1); const t=TABS.find(t=>slug(t.label)===h); if(t) state.tab=t.name; }
+function savePrefs(){ try{ localStorage.setItem("nerdinglib.prefs",JSON.stringify({sort:state.sort,tab:state.tab})); }catch(e){} }
+function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+
+/* ---------- library model ---------- */
+function libItems(){
+  const t=TABS.find(t=>t.kind==="library"); const d=DATA[t?.name]; if(!d) return [];
+  return d.records.map((r,i)=>{
+    const tags=col(r,"Tags","Tag","Topics").split(/[,;|]/).map(s=>s.trim()).filter(Boolean);
+    const titleRaw=col(r,"Title","Name");
+    const [title,...rest]=titleRaw.split(/\n+/);
+    const date=col(r,"Date Added","Date");
+    const ts=parseDate(date);
+    return { i, title:title.trim(), alt:rest.join(" ").trim(), tags, type:col(r,"Type","Format"), summary:col(r,"Summary","Description","Notes"),
+      speaker:col(r,"Speaker","Writer","Author"), rec:col(r,"Recommended by","Added by","Shared by"), date, ts,
+      year: ts?String(new Date(ts).getUTCFullYear()):"", link:col(r,"Link","URL") };
+  }).filter(x=>x.title||x.link);
+}
+function facet(items,key){
+  const m=new Map();
+  items.forEach(it=>{ (key==="tags"?it.tags:[it[key]]).forEach(v=>{ if(v) m.set(v,(m.get(v)||0)+1); }); });
+  return [...m.entries()].sort((a,b)=> key==="year" ? b[0].localeCompare(a[0]) : (b[1]-a[1]||a[0].localeCompare(b[0])));
+}
+function matches(it,skip){
+  const F=state.f;
+  if(skip!=="tags"&&F.tags.size&&!it.tags.some(t=>F.tags.has(t))) return false;
+  if(skip!=="type"&&F.type.size&&!F.type.has(it.type)) return false;
+  if(skip!=="rec"&&F.rec.size&&!F.rec.has(it.rec)) return false;
+  if(skip!=="year"&&F.year.size&&!F.year.has(it.year)) return false;
+  if(state.q){
+    const hay=norm([it.title,it.alt,it.summary,it.speaker,it.rec,it.type,it.tags.join(" ")].join(" "));
+    if(!norm(state.q).split(/\s+/).filter(Boolean).every(w=>hay.includes(w))) return false;
+  }
+  return true;
+}
+const cmp=(a,b)=>a.localeCompare(b,undefined,{sensitivity:"base"});
+function sorted(list){
+  const s=state.sort, L=[...list];
+  if(s==="new") L.sort((a,b)=>b.ts-a.ts||b.i-a.i);
+  else if(s==="old") L.sort((a,b)=>a.ts-b.ts||a.i-b.i);
+  else if(s==="title") L.sort((a,b)=>cmp(a.title,b.title));
+  else if(s==="speaker") L.sort((a,b)=>cmp(a.speaker||"~",b.speaker||"~"));
+  else if(s==="type") L.sort((a,b)=>cmp(a.type||"~",b.type||"~")||b.ts-a.ts);
+  else if(s==="rec") L.sort((a,b)=>cmp(a.rec||"~",b.rec||"~")||b.ts-a.ts);
+  return L;
+}
+const fCount=()=>Object.values(state.f).reduce((n,s)=>n+s.size,0);
+
+/* ---------- render ---------- */
+function render(){
+  renderTabs();
+  const t=TABS.find(t=>t.name===state.tab)||TABS[0];
+  $("#libView").classList.toggle("hidden",t.kind!=="library");
+  $("#simpleView").classList.toggle("hidden",t.kind==="library");
+  if(t.kind==="library") renderLib(); else renderSimple(t);
+}
+function renderTabs(){
+  $("#tabs").innerHTML=TABS.map(t=>{
+    const n=DATA[t.name]?.records.length;
+    return `<button class="tab" role="tab" aria-selected="${t.name===state.tab}" data-tab="${esc(t.name)}">${esc(t.label)}${n!=null?`<span class="n">${n}</span>`:""}</button>`;
+  }).join("");
+}
+function renderLib(){
+  const all=libItems();
+  const tagFacet=facet(all,"tags");
+  $("#quickTags").innerHTML=tagFacet.map(([v])=>`<button class="chip" data-f="tags" data-v="${esc(v)}" aria-pressed="${state.f.tags.has(v)}">${esc(v)}</button>`).join("");
+  const list=sorted(all.filter(it=>matches(it)));
+  const n=fCount();
+  $("#fcount").textContent=n; $("#fcount").classList.toggle("hidden",!n);
+  $("#clearAll").classList.toggle("hidden",!(n||state.q));
+  $("#qclear").style.display=state.q?"block":"none";
+  $("#count").textContent= list.length===all.length ? `${all.length} resources` : `${list.length} of ${all.length} resources`;
+  if(!all.length){ $("#list").innerHTML=`<div class="skeleton"></div><div class="skeleton"></div>`; return; }
+  if(!list.length){ $("#list").innerHTML=`<div class="empty"><b>Nothing matches yet</b>Try fewer filters or a different word.</div>`; return; }
+  $("#list").innerHTML=list.map(it=>`
+    <article class="card">
+      <div class="top"><span class="type"><i style="background:${typeColor(it.type)}"></i>${esc(it.type||"Link")}</span><span>${esc(it.date)}</span></div>
+      <h2>${esc(it.title)}${it.alt?`<small>${esc(it.alt)}</small>`:""}</h2>
+      ${it.speaker?`<div class="by">${esc(it.speaker)}</div>`:""}
+      ${it.summary?`<p class="sum">${esc(it.summary)}</p><button class="more hidden">Read more</button>`:""}
+      ${it.tags.length?`<div class="tags">${it.tags.map(t=>`<button class="chip" data-f="tags" data-v="${esc(t)}" aria-pressed="${state.f.tags.has(t)}">${esc(t)}</button>`).join("")}</div>`:""}
+      <div class="foot">
+        <div class="rec">${it.rec?`Shared by <b>${esc(it.rec)}</b>`:""}</div>
+        ${it.link?`<a class="open" href="${esc(it.link)}" target="_blank" rel="noopener">${esc(linkLabel(it.link)||"Open")}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`:""}
+      </div>
+    </article>`).join("");
+  // show "Read more" only where the summary is actually clipped
+  requestAnimationFrame(()=>document.querySelectorAll("#list .card").forEach(c=>{
+    const p=c.querySelector(".sum"), b=c.querySelector(".more"); if(p&&b&&p.scrollHeight>p.clientHeight+2) b.classList.remove("hidden");
+  }));
+}
+function renderSimple(t){
+  const d=DATA[t.name];
+  if(!d){ $("#simpleList").innerHTML=`<div class="skeleton"></div>`; return; }
+  const linkKey=d.headers.find(h=>/link|url/i.test(h));
+  const textKeys=d.headers.filter(h=>h!==linkKey);
+  $("#simpleList").innerHTML=d.records.map(r=>{
+    const vals=textKeys.map(k=>r[k]).filter(Boolean);
+    const lab=vals.length>1?vals[0]:"", title=vals.length>1?vals.slice(1).join(" · "):(vals[0]||"Untitled");
+    const url=r[linkKey]||"";
+    const inner=`${lab?`<div class="lab">${esc(lab)}</div>`:`<div class="lab">▶</div>`}
+      <div class="txt"><b>${esc(title)}</b><span>${esc(linkLabel(url))}</span></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
+    return url?`<a class="card simple" href="${esc(url)}" target="_blank" rel="noopener">${inner}</a>`:`<div class="card simple">${inner}</div>`;
+  }).join("") || `<div class="empty"><b>Nothing here yet</b></div>`;
+}
+
+/* ---------- filter sheet ---------- */
+const GROUPS=[["tags","Topics"],["type","Type"],["rec","Shared by"],["year","Year added"]];
+function renderSheet(){
+  const all=libItems();
+  $("#sheetBody").innerHTML=GROUPS.map(([k,label])=>{
+    const vals=facet(all,k); if(!vals.length) return "";
+    return `<h4>${label}</h4><div class="wrapchips">${vals.map(([v,c])=>`<button class="chip" data-f="${k}" data-v="${esc(v)}" aria-pressed="${state.f[k].has(v)}">${esc(v)} <span style="opacity:.55">${c}</span></button>`).join("")}</div>`;
+  }).join("");
+  const n=all.filter(it=>matches(it)).length;
+  $("#sheetApply").textContent=`Show ${n} result${n===1?"":"s"}`;
+}
+function openSheet(){ renderSheet(); $("#sheet").classList.add("on"); $("#scrim").classList.add("on"); }
+function closeSheet(){ $("#sheet").classList.remove("on"); $("#scrim").classList.remove("on"); }
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+  const tab=e.target.closest("[data-tab]");
+  if(tab){ state.tab=tab.dataset.tab; const t=TABS.find(x=>x.name===state.tab); try{ history.replaceState(null,"","#"+slug(t.label)); }catch(_){ } savePrefs(); render(); window.scrollTo({top:0}); return; }
+  const chip=e.target.closest("[data-f]");
+  if(chip){ const s=state.f[chip.dataset.f], v=chip.dataset.v; s.has(v)?s.delete(v):s.add(v);
+    renderLib(); if($("#sheet").classList.contains("on")) renderSheet(); return; }
+  const more=e.target.closest(".more");
+  if(more){ const c=more.closest(".card"); c.classList.toggle("open"); more.textContent=c.classList.contains("open")?"Show less":"Read more"; }
+});
+let qt; $("#q").addEventListener("input",e=>{ clearTimeout(qt); qt=setTimeout(()=>{ state.q=e.target.value.trim(); renderLib(); },120); });
+$("#qclear").onclick=()=>{ $("#q").value=""; state.q=""; renderLib(); $("#q").focus(); };
+$("#sort").value=state.sort;
+$("#sort").onchange=e=>{ state.sort=e.target.value; savePrefs(); renderLib(); };
+$("#clearAll").onclick=()=>{ Object.values(state.f).forEach(s=>s.clear()); state.q=""; $("#q").value=""; renderLib(); };
+$("#sheetClear").onclick=()=>{ Object.values(state.f).forEach(s=>s.clear()); renderSheet(); renderLib(); };
+$("#openFilters").onclick=openSheet;
+$("#sheetApply").onclick=closeSheet; $("#sheetClose").onclick=closeSheet; $("#scrim").onclick=closeSheet;
+$("#refresh").onclick=()=>load(true);
+$("#sheetLink").href=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
+// re-check the sheet when someone comes back to the tab after a while
+let lastLoad=Date.now();
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&Date.now()-lastLoad>5*60e3){ lastLoad=Date.now(); load(false); } });
+
+render();
+load(false);
+</script>
+</body>
+</html>
